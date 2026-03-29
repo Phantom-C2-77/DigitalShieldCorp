@@ -55,6 +55,17 @@ services:
       - SYS_PTRACE
     restart: unless-stopped
 
+  ds-webserver:
+    build: ./ds-webserver
+    container_name: ds-webserver
+    hostname: ds-webserver
+    networks:
+      corporate:
+        ipv4_address: 10.10.20.40
+    cap_add:
+      - SYS_PTRACE
+    restart: unless-stopped
+
   ds-webmail:
     build: ./ds-webmail
     container_name: ds-webmail
