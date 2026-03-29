@@ -17,7 +17,7 @@ A realistic multi-network attack lab designed for practicing red team operations
 
 Digital Shield Corporation is a fictional cybersecurity company with a fully functional corporate infrastructure — website, webmail, developer portal, file servers, monitoring, databases, and a secrets vault. Your mission: compromise the entire organization from a single entry point.
 
-**9 containers | 4 networks | 10 flags | 1,750 points**
+**10 containers | 4 networks | 10 flags | 1,750 points**
 
 ## Network Topology
 
@@ -38,6 +38,7 @@ ATTACKER (Your Machine)
 ║  ds-jumphost   10.10.20.10   SSH Bastion (from DMZ) ◄──┘ ║
 ║  ds-filestore  10.10.20.20   File Server (FTP/SSH) ────╬──┐
 ║  ds-monitoring 10.10.20.30   Monitoring Dashboard      ║  │
+║  ds-webserver  10.10.20.40   Apache+PHP Client Portal  ║  │
 ═════════════════════════════════════════════════════════    │
                                                             │
 ═══ RESTRICTED (10.10.30.0/24) [Internal] ══════════════    │
@@ -93,11 +94,11 @@ sudo docker compose down && sudo docker compose up -d --build
 
 | Aspect | Details |
 |--------|---------|
-| Initial Access | Web application exploitation (auth bypass, LFI, command injection) |
+| Initial Access | Web application exploitation (auth bypass, LFI, command injection, file upload) |
 | Credential Discovery | No plaintext password files — must exploit services, crack hashes, read emails |
 | Pivoting | Internal networks require multi-hop SSH or SOCKS proxy tunneling |
 | Privilege Escalation | GTFOBins techniques (tcpdump, rsync, openssl) |
-| Services | Flask apps, Redis, PostgreSQL, FTP, SSH |
+| Services | Flask apps, Apache+PHP, Redis, PostgreSQL, FTP, SSH |
 | Decoys | 7+ rabbit holes to waste your time |
 
 ## Flags
@@ -123,7 +124,8 @@ Submit flags at the scoreboard: `http://localhost:9999`
 
 - Web application enumeration and exploitation
 - Credential brute forcing and password cracking
-- Service misconfiguration exploitation (Redis, FTP)
+- Service misconfiguration exploitation (Redis, FTP, Apache)
+- Web shell upload and execution (PHP, ASP, JSP)
 - Multi-network pivoting and tunneling
 - SSH key/credential reuse attacks
 - Linux privilege escalation (SUID, sudo, cron)
@@ -170,6 +172,7 @@ DigitalShieldCorp/
 ├── ds-jumphost/                # SSH bastion (bridges DMZ → Corporate)
 ├── ds-filestore/               # File server (FTP + SSH, bridges Corp → Restricted)
 ├── ds-monitoring/              # Monitoring dashboard (HTTP Basic Auth + LFI)
+├── ds-webserver/               # Apache+PHP client portal (file upload → web shell)
 ├── ds-database/                # PostgreSQL (credential chain + RCE)
 ├── ds-vault/                   # Secrets vault API (HTTPS + bearer auth)
 └── ds-scoreboard/              # CTF scoreboard (flag submission + leaderboard)
