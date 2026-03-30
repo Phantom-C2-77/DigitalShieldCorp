@@ -99,12 +99,39 @@ def upload():
     return redirect("/admin/dashboard")
 
 # ──── VULN: Uploaded scripts are executed server-side (RCE via file upload) ────
-@app.route("/uploads/<path:filename>")
+@app.route("/uploads/<path:filename>", methods=["GET", "POST"])
 def serve_upload(filename):
     filepath = os.path.join(UPLOAD_DIR, filename)
     if not os.path.exists(filepath):
         return "File not found", 404
-    # Executable scripts get run on the server — classic unrestricted upload RCE
+
+    # PHP webshells — execute via php-cli, pass headers and POST data as env vars
+    if filename.endswith(".php"):
+        try:
+            env = os.environ.copy()
+            env["REQUEST_METHOD"] = request.method
+            env["QUERY_STRING"] = request.query_string.decode()
+            # Forward all HTTP headers as PHP $_SERVER vars
+            for key, value in request.headers:
+                env_key = "HTTP_" + key.upper().replace("-", "_")
+                env[env_key] = value
+            # Forward POST data via stdin
+            stdin_data = None
+            if request.method == "POST":
+                stdin_data = request.get_data()
+                env["CONTENT_TYPE"] = request.content_type or "application/x-www-form-urlencoded"
+                env["CONTENT_LENGTH"] = str(len(stdin_data))
+            result = subprocess.run(
+                ["php", filepath],
+                capture_output=True, text=True, timeout=120,
+                env=env, input=stdin_data.decode() if stdin_data else None
+            )
+            output = result.stdout + result.stderr
+            return output, 200, {"Content-Type": "text/html"}
+        except Exception as e:
+            return f"Execution error: {e}", 500
+
+    # Shell/Python/Perl/Ruby scripts — execute directly
     if filename.endswith((".sh", ".py", ".pl", ".rb")) and os.access(filepath, os.X_OK):
         try:
             result = subprocess.run(filepath, shell=True, capture_output=True, text=True, timeout=120)
@@ -112,6 +139,7 @@ def serve_upload(filename):
             return f"<html><head><title>Digital Shield</title><link rel='stylesheet' href='/static/style.css'></head><body style='background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px'><pre>{output}</pre></body></html>"
         except Exception as e:
             return f"Execution error: {e}", 500
+
     return send_from_directory(UPLOAD_DIR, filename)
 
 # ──── API: User enumeration (exposed by design) ────

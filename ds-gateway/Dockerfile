@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl wget netcat-openbsd openssh-client sudo cron procps \
-    vim net-tools iputils-ping nmap sshpass \
+    vim net-tools iputils-ping nmap sshpass php-cli \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir flask requests
