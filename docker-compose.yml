@@ -124,6 +124,8 @@ services:
     networks:
       corporate:
         ipv4_address: 10.10.20.30
+      management:
+        ipv4_address: 10.10.40.20
     ports:
       - "8090:8080"
     restart: unless-stopped
