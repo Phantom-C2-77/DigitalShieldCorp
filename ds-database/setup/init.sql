@@ -35,7 +35,8 @@ CREATE TABLE credentials (
 INSERT INTO credentials VALUES
 (1, 'vault_api', 'vault_service', 'dsc-vault-tk-8f3a2b9c7d1e4056', 'Bearer token for ds-vault API at 10.10.30.20:8443'),
 (2, 'monitoring', 'nagios', 'Monitor2026!', 'Monitoring dashboard HTTP Basic Auth'),
-(3, 'aws_staging', 'AKIAIOSFODNN7EXAMPLE', 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY', 'AWS staging — NOT production');
+(3, 'aws_staging', 'AKIAIOSFODNN7EXAMPLE', 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY', 'AWS staging — NOT production'),
+(4, 'vault_ssh', 'vaultadmin', 'V@ultAdm1n_2026!', 'SSH access to ds-vault at 10.10.30.20');
 
 -- Secrets table (encrypted values + the key is here too — realistic mistake)
 CREATE TABLE secrets (
