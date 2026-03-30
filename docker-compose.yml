@@ -10,6 +10,7 @@
 #
 #  Ports exposed:
 #    8888  → ds-gateway (company website)
+#    8025  → ds-webmail (corporate webmail)
 #    9999  → ds-scoreboard (CTF scoreboard)
 #
 ###############################################################
@@ -75,6 +76,8 @@ services:
     networks:
       dmz:
         ipv4_address: 10.10.10.20
+    ports:
+      - "8025:8080"
     restart: unless-stopped
 
   ds-devportal:
