@@ -24,7 +24,7 @@ RUN mkdir -p /var/www/maintenance && \
     chmod 644 /var/www/maintenance/.maintenance_log
 
 # ──── VULN: leaked credentials in .env ────
-RUN printf '# Digital Shield Gateway Config\nDB_HOST=10.10.30.10\nDB_USER=root\nDB_PASS=W0ntWork_Decoy!\nDB_NAME=production\n\n# Admin portal (TODO: move to vault)\nADMIN_USER=admin\nADMIN_PASS=Shield2026!\n' > /var/www/.env
+RUN printf '# Digital Shield Gateway Config\nDB_HOST=10.10.30.10\nDB_USER=root\nDB_PASS=W0ntWork_Decoy!\nDB_NAME=production\n\n# Admin portal (TODO: move to vault)\nADMIN_USER=admin\nADMIN_PASS=Shield2026!\n\n# Webmail service account (syncs with corporate AD)\nMAIL_HOST=10.10.10.20\nMAIL_PORT=8080\nMAIL_USER=j.reynolds\nMAIL_PASS=Summer2026!\n' > /var/www/.env
 
 COPY . /app
 WORKDIR /app
