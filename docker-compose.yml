@@ -46,6 +46,8 @@ services:
     build: ./ds-gateway
     container_name: ds-gateway
     hostname: ds-gateway
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       dmz:
         ipv4_address: 10.10.10.10
