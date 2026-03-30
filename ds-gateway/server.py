@@ -110,8 +110,10 @@ def list_uploads():
     rows = ""
     for f in files:
         is_script = f["name"].endswith((".sh", ".py", ".php", ".pl", ".rb"))
-        run_link = f' &nbsp; <a href="/run/{f["name"]}" style="color:#10b981;font-size:12px">[Execute]</a>' if is_script else ""
-        rows += f'<tr><td><a href="/uploads/{f["name"]}" style="color:#00b4d8">{f["name"]}</a>{run_link}</td><td style="color:#6b7280">{f["size"]} bytes</td></tr>\n'
+        if is_script:
+            rows += f'<tr><td><a href="/run/{f["name"]}" style="color:#10b981">{f["name"]}</a> <span style="color:#10b981;font-size:11px">(click to execute)</span></td><td style="color:#6b7280">{f["size"]} bytes</td></tr>\n'
+        else:
+            rows += f'<tr><td><a href="/uploads/{f["name"]}" style="color:#00b4d8">{f["name"]}</a></td><td style="color:#6b7280">{f["size"]} bytes</td></tr>\n'
     if not rows:
         rows = '<tr><td colspan="2" style="color:#6b7280;padding:20px;text-align:center">No files uploaded yet</td></tr>'
     return f'''<html><head><title>Uploads — Digital Shield</title><link rel="stylesheet" href="/static/style.css"></head>
@@ -156,8 +158,8 @@ def run_upload(filename):
     except Exception as e:
         return f"Execution error: {e}", 500
 
-# ──── Download uploaded files ────
-@app.route("/uploads/<path:filename>")
+# ──── Download non-script uploaded files ────
+@app.route("/uploads/<filename>")
 def download_upload(filename):
     return send_from_directory(UPLOAD_DIR, filename)
 
