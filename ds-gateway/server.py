@@ -110,7 +110,7 @@ def list_uploads():
     rows = ""
     for f in files:
         is_script = f["name"].endswith((".sh", ".py", ".php", ".pl", ".rb"))
-        run_link = f' &nbsp; <a href="/uploads/{f["name"]}/run" style="color:#10b981;font-size:12px">[Execute]</a>' if is_script else ""
+        run_link = f' &nbsp; <a href="/run/{f["name"]}" style="color:#10b981;font-size:12px">[Execute]</a>' if is_script else ""
         rows += f'<tr><td><a href="/uploads/{f["name"]}" style="color:#00b4d8">{f["name"]}</a>{run_link}</td><td style="color:#6b7280">{f["size"]} bytes</td></tr>\n'
     if not rows:
         rows = '<tr><td colspan="2" style="color:#6b7280;padding:20px;text-align:center">No files uploaded yet</td></tr>'
@@ -125,7 +125,7 @@ def list_uploads():
 </body></html>'''
 
 # ──── VULN: Execute uploaded scripts (RCE via file upload) ────
-@app.route("/uploads/<path:filename>/run")
+@app.route("/run/<filename>")
 def run_upload(filename):
     fpath = os.path.join(UPLOAD_DIR, filename)
     if not os.path.exists(fpath):
