@@ -61,7 +61,7 @@ def healthcheck():
         return redirect("/admin")
     target = request.form.get("target", "")
     try:
-        result = subprocess.run(f"ping -c 2 {target}", shell=True, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(f"ping -c 2 {target}", shell=True, capture_output=True, text=True, timeout=120)
         output = result.stdout + result.stderr
     except:
         output = "Error running check"
@@ -95,7 +95,7 @@ def upload():
         save_path = os.path.join(UPLOAD_DIR, f.filename)
         f.save(save_path)
         os.chmod(save_path, 0o755)
-        return redirect("/admin/dashboard")
+        return render_template("admin_dashboard.html", upload_msg=f"Uploaded: /uploads/{f.filename}")
     return redirect("/admin/dashboard")
 
 @app.route("/uploads/<path:filename>")

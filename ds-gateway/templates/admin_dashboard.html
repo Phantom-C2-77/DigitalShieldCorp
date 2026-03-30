@@ -27,6 +27,7 @@
 <div class="field"><label>Select File</label><input type="file" name="file" required style="padding:8px"></div>
 <button type="submit" class="btn-full">Upload</button>
 </form>
+{% if upload_msg %}<p style="margin-top:12px;color:#10b981;font-size:13px">✓ {{ upload_msg }}</p>{% endif %}
 </div>
 </div>
 
