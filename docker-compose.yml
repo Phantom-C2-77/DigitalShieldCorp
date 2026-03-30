@@ -78,6 +78,8 @@ services:
     networks:
       dmz:
         ipv4_address: 10.10.10.20
+    ports:
+      - "8025:8080"
     restart: unless-stopped
 
   ds-devportal:
