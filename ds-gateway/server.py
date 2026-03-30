@@ -114,7 +114,7 @@ def api_team():
 
 @app.route("/robots.txt")
 def robots():
-    return "User-agent: *\nDisallow: /admin\nDisallow: /page?name=maintenance\nDisallow: /api/v1/\n", 200, {"Content-Type": "text/plain"}
+    return "User-agent: *\nDisallow: /admin\nDisallow: /page?name=maintenance\nDisallow: /page?name=.\nDisallow: /api/v1/\n", 200, {"Content-Type": "text/plain"}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

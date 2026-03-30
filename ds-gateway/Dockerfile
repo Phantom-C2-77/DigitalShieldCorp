@@ -23,8 +23,8 @@ RUN mkdir -p /var/www/maintenance && \
     echo "FLAG{ds_1_wordpress_initial_foothold}" > /var/www/maintenance/.maintenance_log && \
     chmod 644 /var/www/maintenance/.maintenance_log
 
-# ──── DECOY: fake DB creds that don't work ────
-RUN printf 'DB_HOST=10.10.30.10\nDB_USER=root\nDB_PASS=W0ntWork_Decoy!\nDB_NAME=production\n' > /var/www/.env
+# ──── VULN: leaked credentials in .env ────
+RUN printf '# Digital Shield Gateway Config\nDB_HOST=10.10.30.10\nDB_USER=root\nDB_PASS=W0ntWork_Decoy!\nDB_NAME=production\n\n# Admin portal (TODO: move to vault)\nADMIN_USER=admin\nADMIN_PASS=Shield2026!\n' > /var/www/.env
 
 COPY . /app
 WORKDIR /app
