@@ -85,6 +85,11 @@ tr:hover td{background:rgba(99,102,241,.05)}
 <!-- Main scoreboard (shown if player registered) -->
 <div id="main-section" style="display:none">
 
+<div style="text-align:right;color:#6b7280;font-size:12px;margin-bottom:8px">
+  Operator: <span style="color:#818cf8;font-weight:600">{{player}}</span>
+  <button onclick="changePlayer()" class="btn btn-sm" style="margin-left:8px;background:transparent;border:1px solid #2a3050;color:#6b7280">change name</button>
+</div>
+
 <div class="stats">
 <div class="stat"><div class="val" id="s-captured">0</div><div class="lbl">Flags Captured</div></div>
 <div class="stat"><div class="val" id="s-points">0</div><div class="lbl">Points</div></div>
@@ -207,8 +212,22 @@ async function submitFlag() {
   } else {
     result.classList.add('err');
     result.textContent = '✗ ' + (data.message || data.error);
+    // If the cookie points at a player that no longer exists in the DB
+    // (e.g. after a `docker compose down -v` rebuild), clear the cookie
+    // and bounce back to the registration screen so the user isn't
+    // stranded on a "Player not found" loop.
+    if ((data.error || data.message || '').toLowerCase().includes('player not found')) {
+      document.cookie = 'ds_player=; max-age=0; path=/';
+      setTimeout(() => location.reload(), 800);
+    }
   }
   input.value = '';
+}
+
+function changePlayer() {
+  if (!confirm('Reset operator name? Your captured flags will stay in the DB but you will need to register again.')) return;
+  document.cookie = 'ds_player=; max-age=0; path=/';
+  location.reload();
 }
 
 async function refresh() {
